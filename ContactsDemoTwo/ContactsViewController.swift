@@ -7,7 +7,11 @@
 
 import UIKit
 
-class ContactsViewController: UIViewController {
+protocol EditContactDelegate: AnyObject {
+    func didEditContact(_ contact: Contact, at indexPath: IndexPath)
+}
+
+class ContactsViewController: UIViewController{
     
     private var tableView: UITableView = {
         
@@ -32,7 +36,7 @@ class ContactsViewController: UIViewController {
     
     private var storage: ContactStorageProtocol!
     
-    private var contacts = [ContactProtocol]() {
+     var contacts = [ContactProtocol]() {
         didSet {
 //            contacts.sort { $0.title < $1.title }
             storage.save(contacts: contacts)
@@ -95,8 +99,13 @@ class ContactsViewController: UIViewController {
         }
         navigationItem.title = "Сontacts"
         navigationController?.navigationBar.barTintColor = UIColor(named: "Main")
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .edit, primaryAction: editAction, menu: nil)
         navigationItem.rightBarButtonItem?.tintColor = .black
+        
+        let backButton = UIBarButtonItem(title: "Сancel", style: .plain, target: nil, action: nil)
+        backButton.tintColor = .black
+        navigationItem.backBarButtonItem = backButton
     }
     
     private func loadContacts() {
@@ -158,7 +167,11 @@ extension ContactsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if let contact = contacts[indexPath.row] as? Contact {
-            navigationController?.pushViewController(EditViewController(with: contact), animated: true)
+            
+            let editVC = EditViewController(with: contact)
+            editVC.delegate = self
+            editVC.indexPath = indexPath
+            navigationController?.pushViewController(editVC, animated: true)
         }
     }
     
@@ -189,5 +202,12 @@ extension ContactsViewController {
             addContactButon.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             addContactButon.heightAnchor.constraint(equalToConstant: 40),
         ])
+    }
+}
+
+extension ContactsViewController: EditContactDelegate {
+    func didEditContact(_ contact: Contact, at indexPath: IndexPath) {
+        contacts[indexPath.row] = contact
+        tableView.reloadRows(at: [indexPath], with: .automatic)
     }
 }
