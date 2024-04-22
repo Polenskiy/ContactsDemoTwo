@@ -25,7 +25,7 @@ struct Contact: ContactProtocol {
 
 class ContactStorage: ContactStorageProtocol {
     
-    private var storage = UserDefaults.standard
+    private var storage = CoreDataManager.shared
     
     private var keyForStorage: String = "contacts"
     
@@ -37,17 +37,12 @@ class ContactStorage: ContactStorageProtocol {
     func load() -> [ContactProtocol] {
         var resultContact: [ContactProtocol] = []
         
-        // [[+79109569265: Daniil], [+7435r843095r: Popov], [+7284334234: Rotew]]
-        let contactFromStorage = storage.array(forKey: keyForStorage) as? [[String:String]] ?? []
-        
-        for contact in contactFromStorage {
-            
-            guard let title = contact[ContactKey.title.rawValue],
-                  let phone = contact[ContactKey.phone.rawValue] else {
-                continue
+        let contacts = storage.fetchContacts()
+        for contact in contacts {
+                let title = contact.title ?? ""
+                let number = contact.number ?? ""
+                resultContact.append(Contact(title: title, number: number))
             }
-            resultContact.append(Contact(title: title, number: phone))
-        }
         return resultContact
     }
     
@@ -61,6 +56,12 @@ class ContactStorage: ContactStorageProtocol {
             newElementForStorage[ContactKey.phone.rawValue] = contact.number
             contactsForStorage.append(newElementForStorage)
         }
-        storage.set(contactsForStorage, forKey: keyForStorage)
+        
+        contactsForStorage.forEach { contact in
+            let title = contact[ContactKey.title.rawValue] ?? ""
+            let number = contact[ContactKey.phone.rawValue] ?? ""
+            storage.createContact(title: title, number: number)
+        }
+        
     }
 }

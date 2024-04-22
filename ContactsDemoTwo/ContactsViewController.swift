@@ -11,7 +11,7 @@ protocol EditContactDelegate: AnyObject {
     func didEditContact(_ contact: Contact, at indexPath: IndexPath)
 }
 
-class ContactsViewController: UIViewController{
+class ContactsViewController: UIViewController {
     
     private var tableView: UITableView = {
         
@@ -34,7 +34,20 @@ class ContactsViewController: UIViewController{
         return button
     }()
     
+    private lazy var deleteContactsButon: UIButton = {
+        let button = UIButton()
+        button.setTitle("Delete all contacts", for: .normal)
+        button.backgroundColor = .systemRed
+        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.systemGray, for: .highlighted)
+        button.layer.cornerRadius = 10
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(onDeleteAllContacts), for: .touchUpInside)
+        return button
+    }()
+    
     private var storage: ContactStorageProtocol!
+    private var coreData = CoreDataManager.shared
     
      var contacts = [ContactProtocol]() {
         didSet {
@@ -45,19 +58,24 @@ class ContactsViewController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = UIColor(named: "Main")
-        
+
         configureTableView()
         configureAddContactButton()
+        configureDeleteAllContactsButton()
         setupNavigationBar()
         storage = ContactStorage()
         loadContacts()
         
     }
     
+    
     @objc private func onAddNewContact() {
         showNewContactAlert()
+    }
+    
+    @objc private func onDeleteAllContacts() {
+        deleteAllContacts()
     }
     
     private func showNewContactAlert() {
@@ -90,6 +108,12 @@ class ContactsViewController: UIViewController{
         present(alertController, animated: true, completion: nil)
     }
     
+    private func deleteAllContacts() {
+        contacts.removeAll()
+        coreData.deleteAllContacts()
+        self.tableView.reloadData()
+    }
+    
     private func setupNavigationBar() {
         let editAction = UIAction { _ in
             self.tableView.isEditing.toggle()
@@ -109,13 +133,21 @@ class ContactsViewController: UIViewController{
     }
     
     private func loadContacts() {
-        contacts = storage.load()
+        
+        // Очищаем массив контактов перед загрузкой
+        contacts.removeAll()
+        // Загружаем контакты из хранилища
+        let loadedContacts = storage.load()
+        
+        // Фильтруем загруженные контакты, чтобы оставить только те, которых еще нет в массиве
+        for loadedContact in loadedContacts {
+            if !contacts.contains(where: { $0.title == loadedContact.title && $0.number == loadedContact.number }) {
+                contacts.append(loadedContact)
+            }
+        }
     }
 }
 
-//т.к класс ViewController является источником данных для
-//табличного представления, то его необходимо подписать на
-//cпециальный протокол
 extension ContactsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -131,10 +163,10 @@ extension ContactsViewController: UITableViewDataSource {
         backgroundConfiguration.backgroundColor = .white
         backgroundConfiguration.cornerRadius = 10
         backgroundConfiguration.backgroundInsets = .init(top: 5, leading: 5, bottom: 5, trailing: 5)
+        
         configuration.text = contacts[indexPath.row].title
         configuration.secondaryText = contacts[indexPath.row].number
         cell.contentConfiguration = configuration
-        
         cell.backgroundConfiguration = backgroundConfiguration
         
         return cell
@@ -144,7 +176,7 @@ extension ContactsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         
         let contact = contacts[sourceIndexPath.row]
-        contacts.remove(at: sourceIndexPath.row)
+//        contacts.remove(at: sourceIndexPath.row)
         contacts.insert(contact, at: destinationIndexPath.row)
 //        tableView.reloadRows(at: [destinationIndexPath, sourceIndexPath], with: .bottom)
     }
@@ -157,7 +189,10 @@ extension ContactsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let actionDelegate = UIContextualAction(style: .destructive, title: "Удалить") {_,_,_ in
-            self.contacts.remove(at: indexPath.row)
+            let deleteContact = self.contacts.remove(at: indexPath.row)
+            
+            //сомневаюсь в этом коде
+            self.coreData.deleteOneContact(with: deleteContact.title)
             tableView.reloadData()
         }
         let actions = UISwipeActionsConfiguration(actions: [actionDelegate])
@@ -201,6 +236,16 @@ extension ContactsViewController {
             addContactButon.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             addContactButon.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             addContactButon.heightAnchor.constraint(equalToConstant: 40),
+        ])
+    }
+    
+    func configureDeleteAllContactsButton() {
+        view.addSubview(deleteContactsButon)
+        NSLayoutConstraint.activate([
+            deleteContactsButon.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            deleteContactsButon.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -200),
+            deleteContactsButon.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            deleteContactsButon.heightAnchor.constraint(equalToConstant: 40),
         ])
     }
 }
