@@ -24,9 +24,9 @@ public final class CoreDataManager {
         guard let contactEntityDescription = NSEntityDescription.entity(forEntityName: "CoreDataContact", in: context) else  {
             return
         }
-        let CoreDataContact = CoreDataContact(entity: contactEntityDescription, insertInto: context)
-        CoreDataContact.number = number
-        CoreDataContact.title = title
+        let coreDataContact = CoreDataContact(entity: contactEntityDescription, insertInto: context)
+        coreDataContact.number = number
+        coreDataContact.title = title
         
         appDelegate.saveContext()
     }
@@ -43,7 +43,10 @@ public final class CoreDataManager {
     public func updateContact(with title: String, number: String) {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoreDataContact")
         do {
-            guard let coreDataContacts = try? context.fetch(fetchRequest) as? [CoreDataContact], let coreDataContact = coreDataContacts.first(where: {$0.title == title}) else { return }
+            guard let coreDataContacts = try? context.fetch(fetchRequest) as? [CoreDataContact],
+                  let coreDataContact = coreDataContacts.first(where: {$0.number == number}) else {
+                return
+            }
             coreDataContact.title = title
             coreDataContact.number = number
         }

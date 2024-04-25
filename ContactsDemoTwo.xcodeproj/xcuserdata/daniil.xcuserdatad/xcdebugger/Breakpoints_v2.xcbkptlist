@@ -7,33 +7,49 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D27748E3-CE89-4FCE-A94D-5275D047B18B"
+            uuid = "75B6C238-9CC5-4DC1-A9DF-0DA8AFE99B44"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ContactsDemoTwo/ContactsViewController.swift"
+            filePath = "ContactsDemoTwo/CoreDataManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "195"
-            endingLineNumber = "195"
-            landmarkName = "tableView(_:trailingSwipeActionsConfigurationForRowAt:)"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
+            landmarkName = "deleteOneContact(with:)"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "02A6ECB7-609C-4919-A802-4DE7BD727E9D"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ContactsDemoTwo/ContactsViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "209"
-            endingLineNumber = "209"
-            landmarkName = "tableView(_:didSelectRowAt:)"
-            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "75B6C238-9CC5-4DC1-A9DF-0DA8AFE99B44 - 3494a1b63983c55c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ContactsDemoTwo.CoreDataManager.deleteOneContact(with: Swift.String) -&gt; ()"
+                  moduleName = "ContactsDemoTwo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/daniil/Development/ContactsDemoTwo/ContactsDemoTwo/CoreDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "70"
+                  endingLineNumber = "70"
+                  offsetFromSymbolStart = "828">
+               </Location>
+               <Location
+                  uuid = "75B6C238-9CC5-4DC1-A9DF-0DA8AFE99B44 - 3494a1b63983c55c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ContactsDemoTwo.CoreDataManager.deleteOneContact(with: Swift.String) -&gt; ()"
+                  moduleName = "ContactsDemoTwo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/daniil/Development/ContactsDemoTwo/ContactsDemoTwo/CoreDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "70"
+                  endingLineNumber = "70"
+                  offsetFromSymbolStart = "324">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
