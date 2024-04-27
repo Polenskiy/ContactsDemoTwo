@@ -16,7 +16,7 @@
 		A50C6E562BA1B81100A57056 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50C6E552BA1B81100A57056 /* EditViewController.swift */; };
 		A5428E5E2BD3D10A00C3E14E /* CoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A5428E5C2BD3D10A00C3E14E /* CoreData.xcdatamodeld */; };
 		A5428E622BD3D13B00C3E14E /* CoreDataContact+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5428E602BD3D13B00C3E14E /* CoreDataContact+CoreDataProperties.swift */; };
-		A5428E642BD3D1AD00C3E14E /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5428E632BD3D1AD00C3E14E /* CoreDataManager.swift */; };
+		A5428E642BD3D1AD00C3E14E /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5428E632BD3D1AD00C3E14E /* StorageManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,7 +31,7 @@
 		A50C6E552BA1B81100A57056 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		A5428E5D2BD3D10A00C3E14E /* CoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreData.xcdatamodel; sourceTree = "<group>"; };
 		A5428E602BD3D13B00C3E14E /* CoreDataContact+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreDataContact+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		A5428E632BD3D1AD00C3E14E /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		A5428E632BD3D1AD00C3E14E /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,7 +67,7 @@
 			children = (
 				A509016B2B9794D2005F93F4 /* Model */,
 				A50901572B95DBAB005F93F4 /* AppDelegate.swift */,
-				A5428E632BD3D1AD00C3E14E /* CoreDataManager.swift */,
+				A5428E632BD3D1AD00C3E14E /* StorageManager.swift */,
 				A50901592B95DBAB005F93F4 /* SceneDelegate.swift */,
 				A509015B2B95DBAB005F93F4 /* ContactsViewController.swift */,
 				A50C6E552BA1B81100A57056 /* EditViewController.swift */,
@@ -163,7 +163,7 @@
 				A50C6E562BA1B81100A57056 /* EditViewController.swift in Sources */,
 				A5428E622BD3D13B00C3E14E /* CoreDataContact+CoreDataProperties.swift in Sources */,
 				A509016D2B9794FB005F93F4 /* Contact.swift in Sources */,
-				A5428E642BD3D1AD00C3E14E /* CoreDataManager.swift in Sources */,
+				A5428E642BD3D1AD00C3E14E /* StorageManager.swift in Sources */,
 				A509015A2B95DBAB005F93F4 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

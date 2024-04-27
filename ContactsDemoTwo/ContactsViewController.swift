@@ -14,13 +14,11 @@ protocol EditContactDelegate: AnyObject {
 class ContactsViewController: UIViewController {
     
     private var tableView: UITableView = {
-        
         let table = UITableView()
         table.register(UITableViewCell.self, forCellReuseIdentifier: "ContactCell")
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
     }()
-    
     
     private lazy var addContactButon: UIButton = {
         let button = UIButton()
@@ -34,19 +32,18 @@ class ContactsViewController: UIViewController {
         return button
     }()
     
-    private var storage: ContactStorageProtocol!
-    private var coreData = CoreDataManager.shared
+    private var storage: ContactStorageProtocol = ContactStorage()
     
-     var contacts = [ContactProtocol]()
+    private var coreData = StorageManager.shared
+    
+    private var contacts = [ContactProtocol]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(named: "Main")
-
         configureTableView()
         configureAddContactButton()
         setupNavigationBar()
-        storage = ContactStorage()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -54,13 +51,8 @@ class ContactsViewController: UIViewController {
         contacts = storage.load()
     }
     
-    
     @objc private func onAddNewContact() {
         showNewContactAlert()
-    }
-    
-    @objc private func onDeleteAllContacts() {
-        deleteAllContacts()
     }
     
     private func showNewContactAlert() {
@@ -93,31 +85,6 @@ class ContactsViewController: UIViewController {
         alertController.addAction(cancelButton)
         
         present(alertController, animated: true, completion: nil)
-    }
-    
-    private func deleteAllContacts() {
-        contacts.removeAll()
-        coreData.deleteAllContacts()
-        self.tableView.reloadData()
-    }
-    
-    private func setupNavigationBar() {
-        
-        let editAction = UIAction { _ in
-            self.tableView.isEditing.toggle()
-            if !self.tableView.isEditing {
-                self.tableView.reloadData()
-            }
-        }
-        navigationItem.title = "Сontacts"
-        navigationController?.navigationBar.barTintColor = UIColor(named: "Main")
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .edit, primaryAction: editAction, menu: nil)
-        navigationItem.rightBarButtonItem?.tintColor = .black
-        
-        let backButton = UIBarButtonItem(title: "Сancel", style: .plain, target: nil, action: nil)
-        backButton.tintColor = .black
-        navigationItem.backBarButtonItem = backButton
     }
 }
 
@@ -183,7 +150,26 @@ extension ContactsViewController: UITableViewDelegate {
     
 }
 
-extension ContactsViewController {
+private extension ContactsViewController {
+    
+    func setupNavigationBar() {
+        
+        let editAction = UIAction { _ in
+            self.tableView.isEditing.toggle()
+            if !self.tableView.isEditing {
+                self.tableView.reloadData()
+            }
+        }
+        navigationItem.title = "Сontacts"
+        navigationController?.navigationBar.barTintColor = UIColor(named: "Main")
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .edit, primaryAction: editAction, menu: nil)
+        navigationItem.rightBarButtonItem?.tintColor = .black
+        
+        let backButton = UIBarButtonItem(title: "Сancel", style: .plain, target: nil, action: nil)
+        backButton.tintColor = .black
+        navigationItem.backBarButtonItem = backButton
+    }
     
     func configureTableView() {
         tableView.backgroundColor = UIColor(named: "Table")

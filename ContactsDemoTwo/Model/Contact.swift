@@ -25,9 +25,7 @@ struct Contact: ContactProtocol {
 
 class ContactStorage: ContactStorageProtocol {
     
-    private var storage = CoreDataManager.shared
-    
-    private var keyForStorage: String = "contacts"
+    private var storage = StorageManager.shared
     
     private enum ContactKey: String {
         case title//0
@@ -46,6 +44,10 @@ class ContactStorage: ContactStorageProtocol {
         return resultContact
     }
     
+    func createC(title: String, number: String ) {
+        storage.createContact(title: title, number: number)
+    }
+    
     func save(contacts: [ContactProtocol]) {
         var contactsForStorage: [[String:String]] = []
         
@@ -62,6 +64,5 @@ class ContactStorage: ContactStorageProtocol {
             let number = contact[ContactKey.phone.rawValue] ?? ""
             storage.createContact(title: title, number: number)
         }
-        
     }
 }

@@ -8,19 +8,44 @@
 import UIKit
 import CoreData
 
-public final class CoreDataManager {
-    static let shared = CoreDataManager()
-    private init() {}
+
+///Этот менеджер лучше сделать абстрактным и назвать его StorageManager
+final class StorageManager {
     
-    private var appDelegate: AppDelegate {
-        UIApplication.shared.delegate as! AppDelegate
-    }
+    static let shared = StorageManager()
     
     private var context: NSManagedObjectContext {
-        appDelegate.persistentContainer.viewContext
+        persistentContainer.viewContext
     }
     
-    public func createContact(title: String, number: String) {
+    //глобальная память
+    private lazy var persistentContainer: NSPersistentContainer = {
+        
+        let container = NSPersistentContainer(name: "CoreData")
+        
+        container.loadPersistentStores { description, error in
+            if let error {
+                print(error.localizedDescription)
+            }
+        }
+        return container
+    }()
+    
+    private init() {}
+
+    //слепок с этой базы данных, с которыми мы можем быстро взаимодействать
+    private func saveContext() {
+        let context = persistentContainer.viewContext
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                fatalError(error.localizedDescription)
+            }
+        }
+    }
+    
+    func createContact(title: String, number: String) {
         guard let contactEntityDescription = NSEntityDescription.entity(forEntityName: "CoreDataContact", in: context) else  {
             return
         }
@@ -28,10 +53,10 @@ public final class CoreDataManager {
         coreDataContact.number = number
         coreDataContact.title = title
         
-        appDelegate.saveContext()
+        saveContext()
     }
     
-    public func fetchContacts() -> [CoreDataContact] {
+    func fetchContacts() -> [CoreDataContact] {
         
         //запрос к базе данных
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoreDataContact")
@@ -40,7 +65,7 @@ public final class CoreDataManager {
         }
     }
     
-    public func updateContact(with title: String, number: String) {
+    func updateContact(with title: String, number: String) {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoreDataContact")
         do {
             guard let coreDataContacts = try? context.fetch(fetchRequest) as? [CoreDataContact],
@@ -50,19 +75,10 @@ public final class CoreDataManager {
             coreDataContact.title = title
             coreDataContact.number = number
         }
-        appDelegate.saveContext()
+        saveContext()
     }
     
-    public func deleteAllContacts() {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoreDataContact")
-        do {
-            let contacts = try? context.fetch(fetchRequest) as? [CoreDataContact]
-            contacts?.forEach { context.delete($0) }
-        }
-        appDelegate.saveContext()
-    }
-    
-    public func deleteOneContact(with title: String) {
+    func deleteOneContact(with title: String) {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoreDataContact")
         do {
             let contacts = try? context.fetch(fetchRequest) as? [CoreDataContact]
@@ -71,7 +87,7 @@ public final class CoreDataManager {
                   let contact = contacts.first(where: {$0.title == title}) else { return }
             context.delete(contact)
         }
-        appDelegate.saveContext()
+        saveContext()
     }
     
 }
